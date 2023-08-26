@@ -1,5 +1,5 @@
-#ifndef PRIVATE_H__
-#define PRIVATE_H__
+#ifndef CVECTOR_PRIVATE_H__
+#define CVECTOR_PRIVATE_H__
 
 #ifndef NODISCARD
     #define NODISCARD
@@ -9,4 +9,4 @@
     #endif // __GNUC__ && !__clang__
 #endif // !NODISCARD
 
-#endif // !PRIVATE_H__
+#endif // !CVECTOR_PRIVATE_H__

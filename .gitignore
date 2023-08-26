@@ -1,0 +1,6 @@
+# build directories
+build**
+
+# text-editor specifics
+.idea**
+.vscode**

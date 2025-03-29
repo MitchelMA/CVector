@@ -1,7 +1,7 @@
 add_library(CVector)
 
-file(GLOB VECTOR_HEADERS *.h)
-file(GLOB VECTOR_SOURCES *.c)
+file(GLOB VECTOR_HEADERS ./include/*.h)
+file(GLOB VECTOR_SOURCES ./private/*.c)
 
 target_sources(CVector
     PRIVATE
@@ -11,4 +11,4 @@ target_sources(CVector
 
 target_include_directories(CVector
     PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR})
+    ${CMAKE_CURRENT_LIST_DIR}/include)

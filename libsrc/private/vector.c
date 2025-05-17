@@ -80,6 +80,31 @@ void vector_clean(vector_t* vec)
     free(vec);
 }
 
+void vector_clean_deep(vector_t* vec, void (*clean_func)(void*))
+{
+    if (vec == NULL)
+        return;
+
+    size_t elem_count = vec->elem_count;
+    if (elem_count == 0)
+    {
+        vector_clean(vec);
+        return;
+    }
+
+    for (size_t i = 0; i < elem_count; ++i)
+    {
+        char* elem = NULL;
+
+        if (!vector_elem_at(vec, i, (void**)&elem))
+            continue;
+
+        clean_func((void*)elem);
+    }
+
+    vector_clean(vec);
+}
+
 size_t vector_get_elem_count(const vector_t* vec)
 {
     return vec->elem_count;
@@ -187,6 +212,44 @@ vector_t* vector_copy(const vector_t* vec, size_t start_index, size_t elem_count
 
     memcpy(ret->start_addr, (void*) start_copy_addr, amount_to_copy);
 
+    return ret;
+}
+
+vector_t*
+vector_copy_deep(
+    const vector_t* vec,
+    size_t start_index,
+    size_t elem_count,
+    bool (*copy_func)(void* /* dest */, const void* /* src */)
+)
+{
+    if (elem_count == 0)
+        elem_count = vec->elem_count - start_index;
+
+    if ((elem_count + start_index) > vec->elem_count)
+        return NULL;
+
+    vector_t* ret = vector_create(vec->elem_size);
+    if (ret == NULL)
+        return NULL;
+
+    size_t end_index = start_index + elem_count;
+    char* dest = malloc(vec->elem_size);
+
+    for (size_t i = start_index; i < end_index; ++i)
+    {
+        char* elem_to_copy = NULL;
+
+        if (!vector_elem_at(vec, i, (void**)&elem_to_copy))
+            continue;
+
+        if (!copy_func((void*)dest, (void*)elem_to_copy))
+            continue;
+
+        vector_append(ret, (void*)dest);
+    }
+
+    free(dest);
     return ret;
 }
 

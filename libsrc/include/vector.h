@@ -38,6 +38,13 @@ vector_t* vector_create_from(size_t elem_size, size_t elem_count, const void* st
 void vector_clean(vector_t* vec);
 
 /**
+ * Cleans up each individual element in the vector, and then calls vector_clean to clean up the vector itself.
+ * @param vec The vector to be cleaned up.
+ * @param clean_func The cleaning function that cleans each individual element.
+ */
+void vector_clean_deep(vector_t* vec, void (*clean_func)(void*));
+
+/**
  * Gets the amount of elements in the vector.
  * @param vec
  * @return
@@ -129,7 +136,7 @@ bool vector_insert_to(vector_t* vec, size_t index, void* elem);
 #define vector_insert_to_ex(vector_ptr, index, ...) vector_insert_ex_(vector_ptr, index, __VA_ARGS__, NULL)
 
 /**
- * Makes a deep-copy from `start_index` with `elem_count` amount of items.
+ * Makes a copy from `start_index` with `elem_count` amount of items.
  * @param vec
  * @param start_index
  * @param elem_count When `0`, this value will automatically be calculated for all the elements starting from `start_index`.
@@ -137,6 +144,24 @@ bool vector_insert_to(vector_t* vec, size_t index, void* elem);
  */
 NODISCARD
 vector_t* vector_copy(const vector_t* vec, size_t start_index, size_t elem_count);
+
+/**
+ * Makes a deep-copied vector from `start_index` with `elem_count` amount of items, using the given `copy_func`.
+ * @param vec The vector to-be copied.
+ * @param start_index The starting index.
+ * @param elem_count When `0`, this value will automatically be calculated as to copy the whole vector.
+ * @param copy_func This is the function that's used to copy each individual element, the first argument is the `dest`,
+ *                  the second the `src` and it returns `true` on success and `false` on failure
+ * @return A pointer to a heap allocated copy of `vec`.
+ */
+NODISCARD
+vector_t*
+vector_copy_deep(
+    const vector_t* vec,
+    size_t start_index,
+    size_t elem_count,
+    bool (*copy_func)(void* /* dest */, const void* /* src */)
+);
 
 /**
  * Copies a vector into another vector at `dst_index` from `src_index` for `elem_count` amount of items.

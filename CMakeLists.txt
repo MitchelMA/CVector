@@ -4,6 +4,4 @@ project(CVector
     DESCRIPTION "A simple vector for dynamic memory in C"
     LANGUAGES C)
 
-set(CMAKE_C_STANDARD 17)
-
 add_subdirectory(libsrc)

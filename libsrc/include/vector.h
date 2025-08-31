@@ -38,6 +38,16 @@ vector_t* vector_create_from(size_t elem_size, size_t elem_count, const void* st
 void vector_clean(vector_t* vec);
 
 /**
+ * Releases the memory buffer of the vector and cleans the vector.
+ * The memory buffer will have a size of `vector.elem_size * vector.count`.
+ *
+ * @returns
+ * _NULL_ on cleanup failure.  
+ * A pointer to the memory-buffer on success.
+ */
+void* vector_clean_release(vector_t* vec);
+
+/**
  * Cleans up each individual element in the vector, and then calls vector_clean to clean up the vector itself.
  * @param vec The vector to be cleaned up.
  * @param clean_func The cleaning function that cleans each individual element.

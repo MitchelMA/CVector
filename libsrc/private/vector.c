@@ -80,6 +80,27 @@ void vector_clean(vector_t* vec)
     free(vec);
 }
 
+void* vector_clean_release(vector_t* vec)
+{
+    if (vec == NULL || vec->start_addr == NULL || vec->elem_count == 0)
+        return NULL;
+
+    size_t old_elem_size  = vec->elem_size;
+    size_t old_elem_count = vec->elem_count;
+    void*  old_buffer     = vec->start_addr;
+
+    free(vec);
+
+    void* new_addr = realloc(old_buffer, old_elem_size * old_elem_count);
+    if (new_addr == NULL)
+    {
+        free(old_buffer);
+        return NULL;
+    }
+
+    return new_addr;
+}
+
 void vector_clean_deep(vector_t* vec, void (*clean_func)(void*))
 {
     if (vec == NULL)
